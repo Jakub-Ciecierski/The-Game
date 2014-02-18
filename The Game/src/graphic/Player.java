@@ -17,6 +17,7 @@ public class Player {
 	private Color playerColor;
 	Thread flyingUp;
 	Thread flyingDown;
+	boolean isInit;
 	
 	public Player(int width, int height)
 	{
@@ -25,27 +26,37 @@ public class Player {
 		this.x=0;
 		this.y=0;
 		this.playerColor=Color.red;
+		isInit=true;
 	}
 	
-	public void flyDown(Graphics2D g2d)
+	
+	public void refreshPlayer(Graphics2D g2d)
 	{
 		g2d.setColor(playerColor);
 		g2d.fillRect(x,y,width,height);
-		x++;
-		y++;
+		
+		// Reset the coords
 		if(x>779)
 			x=0;
 		if(y>399)
 			y=0;
-		if(y<0)
+		if(y<0-height)
 			y=399;
-		try {
-			Thread.sleep(6);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		
+		// Checks if the function is run for the first time, then init FlyingDown thread
+		if(isInit)		
+		{
+			flyDown();
+			isInit=false;
 		}
 		
 	}
+	public void flyDown()
+	{ 
+		flyingDown = new FlyingDown();
+		flyingDown.start();
+	}
+	
 	
 	public void stopFlyingDown()
 	{
@@ -72,34 +83,25 @@ public class Player {
 		}
 	}
 	
-	
-	
 	class FlyingDown extends Thread
 	{
-		Graphics2D g2d;
-		FlyingDown (Graphics2D g2d)
-		{
-			this.g2d=g2d;
-		}
 		public void run()
 		{
-			System.out.println("Flying down started");
 			while(true)
 			{
+				x++;
+				y++;
+				System.out.println("flying down");
+				
 				try {
-					flyingDown.sleep(500);
+					flyingDown.sleep(5);
 				} catch (InterruptedException e) {
 					break;
 				}
-				g2d.setColor(playerColor);
-				g2d.fillRect(x,y,width,height);
-				x++;
-				y++;
-				System.out.println(x+" : "+y);
+				
 				if(isInterrupted())
 					break;
 			}
-			System.out.println("Flying down stoped");
 		}
 	}
 	
@@ -109,9 +111,11 @@ public class Player {
 		{
 			while(true)
 			{
-				y-=1;
+				y--;
+				x++;
+				System.out.println("flying up");
 				try {
-					flyingUp.sleep(3);
+					flyingUp.sleep(5);
 				} catch (InterruptedException e) {
 					break;
 					}

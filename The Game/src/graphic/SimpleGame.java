@@ -140,7 +140,8 @@ public class SimpleGame {
 		    this.g2d.fillRect( 0, 0, this.width, this.height );
 		    
 		    // add moving player
-		    this.player.flyDown(this.g2d);
+		    //this.player.flyDown(this.g2d);
+		    this.player.refreshPlayer(this.g2d);
 		    
 		    // display frames per second...
 		    this.g2d.setFont( new Font( "Courier New", Font.PLAIN, 12 ) );
@@ -170,10 +171,7 @@ public class SimpleGame {
 		}
     }
     
-    public void addPlayer()
-    {
-    	this.player.flyDown(g2d);
-    }
+ 
 	class PlayerMouseListener implements MouseListener{
 	
 	    public void mouseClicked(MouseEvent e) {
@@ -182,14 +180,18 @@ public class SimpleGame {
 
 	    public void mousePressed(MouseEvent e) {
 	    	if(e.getButton()==e.BUTTON1)
+	    	{
+	    		player.stopFlyingDown();
 	    		player.flyUp();
-	    	else
-	    		player.flyUp();
+	    	}
 	    }
 
 	    public void mouseReleased(MouseEvent e) {
 	    	if(e.getButton()==e.BUTTON1)
+	    	{
 	    		player.stopFlyingUp();
+	    		player.flyDown();
+	    	}
 	    }
 
 	    public void mouseEntered(MouseEvent e) {
