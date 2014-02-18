@@ -18,6 +18,7 @@ public class Player {
 	Thread flyingUp;
 	Thread flyingDown;
 	boolean isInit;
+	private int state; //flying up 1, flying down 0
 	
 	public Player(int width, int height)
 	{
@@ -27,13 +28,41 @@ public class Player {
 		this.y=0;
 		this.playerColor=Color.red;
 		isInit=true;
+		this.state=0;
 	}
 	
+	/*Returns the State of player
+	flying up 1,flying down 0*/
+	int getState()
+	{
+		return state;
+	}
+	
+	void setState(int state)
+	{
+		this.state = state;
+	}
+	
+	int[] getPosition()
+	{
+		int[] positions ={x,y,x+width,y+height};
+		return positions; 
+	}
 	
 	public void refreshPlayer(Graphics2D g2d)
 	{
 		g2d.setColor(playerColor);
 		g2d.fillRect(x,y,width,height);
+		
+		g2d.setFont( new Font( "Courier New", Font.PLAIN, 16 ) );
+	    g2d.setColor( Color.GREEN );
+		if(getState()==0)
+			g2d.drawString("Flying down", 20, 35);
+		else
+			g2d.drawString("Flying up", 20, 35);
+		
+		g2d.drawString("x: "+x+" y: "+y, 20, 50);
+		
 		
 		// Reset the coords
 		if(x>779)
@@ -43,7 +72,7 @@ public class Player {
 		if(y<0-height)
 			y=399;
 		
-		// Checks if the function is run for the first time, then init FlyingDown thread
+		// Checks if the function is ran for the first time.
 		if(isInit)		
 		{
 			flyDown();
@@ -53,6 +82,7 @@ public class Player {
 	}
 	public void flyDown()
 	{ 
+		setState(0);
 		flyingDown = new FlyingDown();
 		flyingDown.start();
 	}
@@ -62,6 +92,7 @@ public class Player {
 	{
 		if(flyingDown!=null)
 		{
+			setState(1);
 			flyingDown.interrupt();
 			flyingDown=null;
 		}
@@ -91,7 +122,6 @@ public class Player {
 			{
 				x++;
 				y++;
-				System.out.println("flying down");
 				
 				try {
 					flyingDown.sleep(5);
@@ -113,7 +143,7 @@ public class Player {
 			{
 				y--;
 				x++;
-				System.out.println("flying up");
+				
 				try {
 					flyingUp.sleep(5);
 				} catch (InterruptedException e) {

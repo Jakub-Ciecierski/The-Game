@@ -76,7 +76,7 @@ public class SimpleGame {
 	    //--------------------------------
 	    this.graphics = null;
 	    this.g2d = null;
-	    this.backgroundColor = Color.BLUE;
+	    this.backgroundColor = Color.BLACK;
 		
 	}
 
@@ -140,14 +140,16 @@ public class SimpleGame {
 		    this.g2d.fillRect( 0, 0, this.width, this.height );
 		    
 		    // add moving player
-		    //this.player.flyDown(this.g2d);
 		    this.player.refreshPlayer(this.g2d);
+		    this.g2d.setColor( Color.BLUE );
+		    this.g2d.fillRect(width/2, height/2, 50, 50);
 		    
+		    	
 		    // display frames per second...
 		    this.g2d.setFont( new Font( "Courier New", Font.PLAIN, 12 ) );
 		    this.g2d.setColor( Color.GREEN );
 		    this.g2d.drawString( String.format( "FPS: %s", fps ), 20, 20 );
-		                   
+		                
 		    // Blit image and flip...
 		    this.graphics = this.bufferStrategy.getDrawGraphics();
 		    this.graphics.drawImage( this.offScreenImage, 0, 0, null );
@@ -207,6 +209,5 @@ public class SimpleGame {
 	public static void main(String[] args) {
 		SimpleGame simpleGame = new SimpleGame(780,400);
 		simpleGame.start();
-		
 	}
 }
