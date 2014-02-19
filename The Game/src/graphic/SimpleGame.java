@@ -103,6 +103,7 @@ public class SimpleGame {
 		this.canvas.setIgnoreRepaint(true);
 		this.canvas.setSize( this.width, this.height );
 		this.canvas.addMouseListener(new PlayerMouseListener(this.player));
+		this.canvas.addKeyListener(new PlayerKeyListener(this.player));
 	}
     
     

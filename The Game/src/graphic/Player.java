@@ -21,8 +21,15 @@ public class Player {
 	private int state;
 	private int screenWidth;
 	private int screenHeight;
-	Thread flyingUp;
-	Thread flyingDown;
+	
+	FlyingUp flyingUp;
+	FlyingDown flyingDown;
+	
+	//Thread flyingUp;
+	//Thread flyingDown;
+	Thread speedBoost;
+	
+	boolean isBoostUp;
 	
 	public Player(int width, int height,int screenWidth, int screenHeight)
 	{
@@ -35,60 +42,82 @@ public class Player {
 		
 		this.playerColor=Color.red;
 		isInit=true;
+		isBoostUp=false;
 		
+		flyingUp=new FlyingUp(this);
+		flyingDown=new FlyingDown(this);
 		
 		// player starts flying down
 		this.state=0;
 	}
 	
-	int getWidth()
+	public int getWidth()
 	{
 		return this.width;
 	}
 	
-	int getHeight()
+	public int getHeight()
 	{
 		return this.height;
 	}
 	
-	int getX()
+	public int getX()
 	{
 		return x;
 	}
 	
-	int getY()
+	public int getY()
 	{
 		return y;
 	}
 	
 	/*Returns the State of player
 	flying up 1,flying down 0*/
-	int getState()
+	public int getState()
 	{
 		return state;
 	}
 	
-	int[] getPosition()
+	public int[] getPosition()
 	{
 		int[] positions ={x,y,x+width,y+height};
 		return positions; 
 	}
 	
-	int getSpeed()
+	public int getSpeed()
 	{
 		return this.speed;
 	}
 	
-	void setSpeed(int speed)
+	public void setSpeed(int speed)
 	{
 		this.speed=speed;
 	}
 	
-	void setState(int state)
+	public void setState(int state)
 	{
-		this.state = state;
+		this.state=state;
 	}
 	
+	public void decrementX(int n)
+	{
+		this.x=this.x-n;
+	}
+	
+	public void incrementX(int n)
+	{
+		this.x=this.x+n;
+	}
+	
+	public void decrementY(int n)
+	{
+		this.y=this.y-n;
+	}
+	
+	public void incrementY(int n)
+	{
+		this.y=this.y+n;
+	}
 	
 	public void refreshPlayer(Graphics2D g2d)
 	{
@@ -124,77 +153,41 @@ public class Player {
 	public void flyDown()
 	{ 
 		setState(0);
-		flyingDown = new FlyingDown();
-		flyingDown.start();
+		flyingDown.init();
 	}
 	
 	
 	public void stopFlyingDown()
 	{
-		if(flyingDown!=null)
-		{
-			setState(1);
-			flyingDown.interrupt();
-			flyingDown=null;
-		}
+		setState(1);
+		flyingDown.stopThread();
 	}
 	
-	
 	public void flyUp()
+	
 	{
-		flyingUp = new FlyingUp();
-		flyingUp.start();
+		flyingUp.init();
 	}
 	
 	public void stopFlyingUp()
 	{
-		if(flyingUp!=null)
-		{
-			flyingUp.interrupt();
-			flyingUp=null;
-		}
+		flyingUp.stopThread();
 	}
 	
-	class FlyingDown extends Thread
+	public void activateBoost()
 	{
-		public void run()
-		{
-			
-			while(true)
-			{
-				//x++;
-				y++;
-				try {
-					flyingDown.sleep(6);
-				} catch (InterruptedException e) {
-					break;
-				}
-			
-				if(isInterrupted())
-					break;
-			}
-		}
+		//System.out.println("Boost activated");
+		speedBoost= new SpeedBoost(this);
+		speedBoost.start();
 	}
 	
-	class FlyingUp extends Thread
+	public void deactiveteBoost()
 	{
-		public void run()
+		//System.out.println("Boost deactivated");
+		if(speedBoost!=null)
 		{
-			
-			while(true)
-			{
-				y--;
-				//x++;
-			
-				try {
-					flyingUp.sleep(6);
-				} catch (InterruptedException e) {
-					break;
-					}
-				
-				if(isInterrupted())
-					break;
-			}
+			speedBoost.interrupt();
+			speedBoost=null;
 		}
 	}
 	
