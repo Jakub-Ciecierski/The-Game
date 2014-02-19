@@ -19,19 +19,23 @@ public class Player {
 	private Color playerColor;
 	private boolean isInit;
 	private int state;
-	
+	private int screenWidth;
+	private int screenHeight;
 	Thread flyingUp;
 	Thread flyingDown;
 	
-	public Player(int width, int height,int speed)
+	public Player(int width, int height,int screenWidth, int screenheight)
 	{
-		this.setSpeed(speed);
 		this.width=width;
 		this.height=height;
-		this.x=0;
+		this.screenWidth = screenWidth;
+		this.screenHeight = screenHeight;
+		this.x= this.screenWidth/2 - this.width/2;
+		this.y= this.screenHeight/2 - this.height/2;
 		this.y=0;
 		this.playerColor=Color.red;
 		isInit=true;
+		this.state=0;
 		
 		// player starts flying down
 		this.state=0;
@@ -144,10 +148,10 @@ public class Player {
 			
 			while(true)
 			{
-				x++;
+				//x++;
 				y++;
 				try {
-					flyingDown.sleep(speed);
+					flyingDown.sleep(10);
 				} catch (InterruptedException e) {
 					break;
 				}
@@ -166,10 +170,10 @@ public class Player {
 			while(true)
 			{
 				y--;
-				x++;
+				//x++;
 			
 				try {
-					flyingUp.sleep(speed);
+					flyingUp.sleep(10);
 				} catch (InterruptedException e) {
 					break;
 					}

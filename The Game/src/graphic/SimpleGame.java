@@ -36,6 +36,7 @@ public class SimpleGame {
     Color backgroundColor;
     
     Player player;
+    Graph map;
    
     
 	public SimpleGame(int width, int height) {
@@ -48,8 +49,8 @@ public class SimpleGame {
 	    this.totalTime = 0;
 	    this.curTime = System.currentTimeMillis();
 	    this.lastTime = curTime;
-		this.player = new Player(25,25,25);
-		
+		this.player = new Player(25,30,width,height);
+		this.map = new Graph(this.width+30,this.height,30,40);
 		
 		createGameWindow();
 		createCanvas();
@@ -139,16 +140,19 @@ public class SimpleGame {
 		    this.g2d.setColor( this.backgroundColor );
 		    this.g2d.fillRect( 0, 0, this.width, this.height );
 		    
+		    //display map
+	        if(this.frames %5 == 0)
+	        	this.map.updatePosition();
+	        this.g2d.setColor( Color.DARK_GRAY);
+	        this.map.draw(g2d);
+		    
+		    
 		    // add moving player
 		    this.player.refreshPlayer(this.g2d);
-		    
-		    // obstacle
 		    this.g2d.setColor( Color.BLUE );
-		    this.g2d.fillRect(width/2, height/2, 50, 50);
-		    if(player.checkColision(width/2,height/2,50, 50))
-		    	break;
-		 
+		   // this.g2d.fillRect(width/2, height/2, 50, 50);
 		    
+		    	
 		    // display frames per second...
 		    this.g2d.setFont( new Font( "Courier New", Font.PLAIN, 12 ) );
 		    this.g2d.setColor( Color.GREEN );
