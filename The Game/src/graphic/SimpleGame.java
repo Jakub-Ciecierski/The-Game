@@ -155,7 +155,7 @@ public class SimpleGame {
 		    
 		 
 		    //display map
-	        if(this.frames %5 == 0)
+	        if(this.frames %3 == 0)
 	        	this.map.updatePosition();
 	        this.g2d.setColor( Color.DARK_GRAY);
 	        this.map.draw(g2d);

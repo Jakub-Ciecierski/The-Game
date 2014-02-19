@@ -155,7 +155,7 @@ public class Player {
 				//x++;
 				y++;
 				try {
-					flyingDown.sleep(6);
+					flyingDown.sleep(5);
 				} catch (InterruptedException e) {
 					break;
 				}
@@ -177,7 +177,7 @@ public class Player {
 				//x++;
 			
 				try {
-					flyingUp.sleep(6);
+					flyingUp.sleep(5);
 				} catch (InterruptedException e) {
 					break;
 					}

@@ -16,8 +16,9 @@ public class Graph {
 	int totalNumberOfVertices;
 	Vertex[] listOfVertices;
 	ArrayList<ArrayList<Vertex>> listRepresentation;
-	int counter;
 	
+	int counter;
+	int previousObstacle;
 	
 	
 	public Graph(int screenWidth, int screenHeight, int tileWidth,
@@ -32,7 +33,8 @@ public class Graph {
 		this.numberOfVerticesInColumn = this.screenHeight / this.tileHeight;
 		this.totalNumberOfVertices = (this.numberOfVerticesInColumn * this.numberOfVerticesInRow);
 		
-		counter=0;
+		this.counter=0;
+		this.previousObstacle=-1;
 		
 		createVertices();
 		createListRepresentation();
@@ -138,13 +140,23 @@ public class Graph {
 	
 	/*
 	 *  Creates and obstacle in the last column
-	 * 	some alien random math has been used
+	 * 	saves the previousObstacle to make sure that the next jump is possible
+	 * 	other than that, random math is applied to randomize the track
 	 */
 	private void createObstacle()
 	{
+		/*
+		 * gap between 2 and 5 
+		 */
 		Random rand = new Random();
 		int gap = (int)(Math.random()*4) +2;
+		
 		int v = rand.nextInt(numberOfVerticesInColumn-1);
+		if(previousObstacle!=-1)
+			while((previousObstacle-v)*(previousObstacle-v)>numberOfVerticesInColumn/2)
+				v = rand.nextInt(numberOfVerticesInColumn-1);
+		previousObstacle=v;
+		
 		int x = (v+1)-gap;
 		
 		int[] pos = new int[gap];
@@ -158,7 +170,17 @@ public class Graph {
 					i++;
 				}
 				pos[i]=v;
-				v--;
+				if(v<numberOfVerticesInColumn-1)
+				{
+					Random randSide = new Random();
+					int side = randSide.nextInt(1);
+					if(side==0)
+						v++;
+					else
+						v--;
+				}
+				else
+					v--;
 			}
 		}catch(ArrayIndexOutOfBoundsException e){}
 		
