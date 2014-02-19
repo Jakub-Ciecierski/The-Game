@@ -102,7 +102,7 @@ public class SimpleGame {
 		this.canvas = new Canvas();
 		this.canvas.setIgnoreRepaint(true);
 		this.canvas.setSize( this.width, this.height );
-		this.canvas.addMouseListener(new PlayerMouseListener());
+		this.canvas.addMouseListener(new PlayerMouseListener(this.player));
 	}
     
     
@@ -195,40 +195,7 @@ public class SimpleGame {
 		
 		}
     }
-    
  
-	class PlayerMouseListener implements MouseListener{
-	
-	    public void mouseClicked(MouseEvent e) {
-	      //System.out.println("Mouse has been clicked");
-	    }   
-
-	    public void mousePressed(MouseEvent e) {
-	    	if(e.getButton()==e.BUTTON1)
-	    	{
-	    		player.stopFlyingDown();
-	    		player.flyUp();
-	    	}
-	    }
-
-	    public void mouseReleased(MouseEvent e) {
-	    	if(e.getButton()==e.BUTTON1)
-	    	{
-	    		player.stopFlyingUp();
-	    		player.flyDown();
-	    	}
-	    }
-
-	    public void mouseEntered(MouseEvent e) {
-	    	
-	    }
-
-	    public void mouseExited(MouseEvent e) {
-	    	
-	    }
-	 }
-
-	
 	public static void main(String[] args) {
 		
 		SimpleGame simpleGame = new SimpleGame(780,400);

@@ -96,12 +96,12 @@ public class Player {
 		
 		
 		// Reset the coords
-		if(x>779)
-			x=-width;
-		if(y>399)
-			y=-height;
-		if(y<0-height)
-			y=399;
+		/*if(x>779-width)
+			x=779;//x=-width;*/
+		if(y>399-height)
+			y=399-height;//y=-height;
+		if(y<0)
+			y=0;//y=399;
 		
 		// Checks if the function is ran for the first time.
 		if(isInit)		
@@ -155,7 +155,7 @@ public class Player {
 				//x++;
 				y++;
 				try {
-					flyingDown.sleep(5);
+					flyingDown.sleep(6);
 				} catch (InterruptedException e) {
 					break;
 				}
@@ -177,7 +177,7 @@ public class Player {
 				//x++;
 			
 				try {
-					flyingUp.sleep(5);
+					flyingUp.sleep(6);
 				} catch (InterruptedException e) {
 					break;
 					}

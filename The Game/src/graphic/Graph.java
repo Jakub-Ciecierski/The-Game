@@ -18,6 +18,7 @@ public class Graph {
 	ArrayList<ArrayList<Vertex>> listRepresentation;
 	
 	int counter;
+	int rangeOfObstacle;
 	int previousObstacle;
 	
 	
@@ -35,6 +36,7 @@ public class Graph {
 		
 		this.counter=0;
 		this.previousObstacle=-1;
+		this.rangeOfObstacle = 6;
 		
 		createVertices();
 		createListRepresentation();
@@ -90,12 +92,13 @@ public class Graph {
 	public void theMomentOfDybisz(){
 		//System.out.println("ojojoj");
 		/*
-		 * counts the number of column iterations, places obstacle every nth column
+		 * counts the number of column iterations, places obstacle every rangeOfObstacle'th column
 		 */
-		int n= 6;
-		if(counter%n==0)
+		
+		if(counter%rangeOfObstacle==0)
 			createObstacle();
 		counter++;
+		
 		resetObstacle();
 		
 		int j = 0;
