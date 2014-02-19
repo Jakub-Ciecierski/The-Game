@@ -148,17 +148,20 @@ public class Graph {
 		int x = (v+1)-gap;
 		
 		int[] pos = new int[gap];
-		for(int i=0;i<pos.length;i++)
-		{
-			if(x<0)
+		try{
+			for(int i=0;i<pos.length;i++)
 			{
-				pos[i]=gap+x;
-				x++;
-				i++;
+				if(x<0)
+				{
+					pos[i]=gap+x;
+					x++;
+					i++;
+				}
+				pos[i]=v;
+				v--;
 			}
-			pos[i]=v;
-			v--;
-		}
+		}catch(ArrayIndexOutOfBoundsException e){}
+		
 		for(int j=0;j<numberOfVerticesInColumn;j++)
 		{
 			listOfVertices[(numberOfVerticesInRow-1)*numberOfVerticesInColumn+j].setType(1);
