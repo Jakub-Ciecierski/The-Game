@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 import javax.swing.JFrame;
 
@@ -49,7 +50,7 @@ public class SimpleGame {
 	    this.totalTime = 0;
 	    this.curTime = System.currentTimeMillis();
 	    this.lastTime = curTime;
-		this.player = new Player(25,30,width,height);
+		this.player = new Player(30,40,width,height);
 		this.map = new Graph(this.width+30,this.height,30,40);
 		
 		createGameWindow();
@@ -113,7 +114,19 @@ public class SimpleGame {
 
     }
     
+   
+    private boolean checkColision()
+    {
+    	for(int i=0;i<this.map.listOfVertices.length;i++)
+    		if(this.map.listOfVertices[i].getType()==1)
+    			if((this.map.listOfVertices[i].getY()-this.player.getX()<=30)&&(this.map.listOfVertices[i].getY()+30>this.player.getX()) && 
+    					(this.map.listOfVertices[i].getX()-this.player.getY()<=40) && (this.map.listOfVertices[i].getX()+40>this.player.getY()))
+    					return true;
+    	return false;
+    }
+    
     public void start(){
+    	
     	while( true ) {
 		
 		  try {
@@ -140,6 +153,7 @@ public class SimpleGame {
 		    this.g2d.setColor( this.backgroundColor );
 		    this.g2d.fillRect( 0, 0, this.width, this.height );
 		    
+		 
 		    //display map
 	        if(this.frames %5 == 0)
 	        	this.map.updatePosition();
@@ -150,8 +164,9 @@ public class SimpleGame {
 		    // add moving player
 		    this.player.refreshPlayer(this.g2d);
 		    this.g2d.setColor( Color.BLUE );
-		   // this.g2d.fillRect(width/2, height/2, 50, 50);
 		    
+		    if(checkColision())
+		    	break;
 		    	
 		    // display frames per second...
 		    this.g2d.setFont( new Font( "Courier New", Font.PLAIN, 12 ) );
@@ -215,6 +230,7 @@ public class SimpleGame {
 
 	
 	public static void main(String[] args) {
+		
 		SimpleGame simpleGame = new SimpleGame(780,400);
 		simpleGame.start();
 	}

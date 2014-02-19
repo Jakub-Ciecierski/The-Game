@@ -1,8 +1,10 @@
 package graphic;
 
 public class Vertex {
-	
-	String type;
+	/*
+	 * type 0 background, 1 obstacle, 2 falling tile
+	 */
+	int type;
 	int x;
 	int y;
 	int number;
@@ -15,7 +17,7 @@ public class Vertex {
 		this.number = number;
 	}
 
-	public Vertex(int number, String type, int x, int y) {
+	public Vertex(int number, int type, int x, int y) {
 		super();
 		this.type = type;
 		this.x = x;
@@ -23,11 +25,11 @@ public class Vertex {
 		this.number = number;
 	}
 
-	public String getType() {
+	public int getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(int type) {
 		this.type = type;
 	}
 

@@ -41,6 +41,16 @@ public class Player {
 		this.state=0;
 	}
 	
+	int getX()
+	{
+		return x;
+	}
+	
+	int getY()
+	{
+		return y;
+	}
+	
 	/*Returns the State of player
 	flying up 1,flying down 0*/
 	int getState()
@@ -69,12 +79,6 @@ public class Player {
 		this.state = state;
 	}
 	
-	public boolean checkColision(int x,int y,int width,int height)
-	{
-		if((x-this.x<=this.width)&&(x+width>this.x) && (y-this.y<=this.height) && (y+height>this.y))
-				return true;
-		return false;
-	}
 	
 	public void refreshPlayer(Graphics2D g2d)
 	{
@@ -151,7 +155,7 @@ public class Player {
 				//x++;
 				y++;
 				try {
-					flyingDown.sleep(10);
+					flyingDown.sleep(6);
 				} catch (InterruptedException e) {
 					break;
 				}
@@ -173,7 +177,7 @@ public class Player {
 				//x++;
 			
 				try {
-					flyingUp.sleep(10);
+					flyingUp.sleep(6);
 				} catch (InterruptedException e) {
 					break;
 					}

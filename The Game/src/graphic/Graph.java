@@ -1,7 +1,9 @@
 package graphic;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Graph {
 	
@@ -14,7 +16,7 @@ public class Graph {
 	int totalNumberOfVertices;
 	Vertex[] listOfVertices;
 	ArrayList<ArrayList<Vertex>> listRepresentation;
-
+	int counter;
 	
 	
 	
@@ -29,6 +31,8 @@ public class Graph {
 		this.numberOfVerticesInRow = (this.screenWidth / this.tileWidth);
 		this.numberOfVerticesInColumn = this.screenHeight / this.tileHeight;
 		this.totalNumberOfVertices = (this.numberOfVerticesInColumn * this.numberOfVerticesInRow);
+		
+		counter=0;
 		
 		createVertices();
 		createListRepresentation();
@@ -68,7 +72,7 @@ public class Graph {
 	}
 
 	
-
+	/*
 	public static void main(String[] args) {
 		Graph map = new Graph(180,150,30,30);
 		map.theMomentOfDybisz();
@@ -76,12 +80,22 @@ public class Graph {
 		map.showListOfVertices();
 		//map.showListRepresentation();
 	}
+	*/
 	
 	/**
 	 * Special method for the illusion of constant movement.
 	 */
 	public void theMomentOfDybisz(){
-		System.out.println("ojojoj");
+		//System.out.println("ojojoj");
+		/*
+		 * counts the number of column iterations, places obstacle every nth column
+		 */
+		int n= 6;
+		if(counter%n==0)
+			createObstacle();
+		counter++;
+		resetObstacle();
+		
 		int j = 0;
 		Vertex[] tempArray = new Vertex[this.numberOfVerticesInColumn];
 		
@@ -99,6 +113,7 @@ public class Graph {
 				
 				
 				j++;
+			
 			}
 			
 		}
@@ -108,6 +123,50 @@ public class Graph {
 		 */
 		createListRepresentation();
 	}
+	
+	/*
+	 * Resets the first column back to background
+	 */
+	private void resetObstacle()
+	{
+		for(int j=0;j<numberOfVerticesInColumn;j++)
+		{
+			//istOfVertices[j+numberOfVerticesInColumn].setType(2);
+			listOfVertices[j+numberOfVerticesInColumn].setType(0);
+		}
+	}
+	
+	/*
+	 *  Creates and obstacle in the last column
+	 * 	some alien random math has been used
+	 */
+	private void createObstacle()
+	{
+		Random rand = new Random();
+		int gap = (int)(Math.random()*4) +2;
+		int v = rand.nextInt(numberOfVerticesInColumn-1);
+		int x = (v+1)-gap;
+		
+		int[] pos = new int[gap];
+		for(int i=0;i<pos.length;i++)
+		{
+			if(x<0)
+			{
+				pos[i]=gap+x;
+				x++;
+				i++;
+			}
+			pos[i]=v;
+			v--;
+		}
+		for(int j=0;j<numberOfVerticesInColumn;j++)
+		{
+			listOfVertices[(numberOfVerticesInRow-1)*numberOfVerticesInColumn+j].setType(1);
+		}
+		for(int j=0;j<pos.length;j++)
+			listOfVertices[(numberOfVerticesInRow-1)*numberOfVerticesInColumn+pos[j]].setType(0);
+	}
+	
 	private void createVertices(){
 				
 		this.listOfVertices = 
@@ -122,7 +181,7 @@ public class Graph {
 			int tempX = (i % this.numberOfVerticesInColumn) * this.tileHeight;
 			int tempY = i/this.numberOfVerticesInColumn;
 			tempY = tempY * tileWidth;
-			Vertex tempVertex = new Vertex(i, "pusto", tempX, tempY);
+			Vertex tempVertex = new Vertex(i, 0, tempX, tempY);
 			
 			listOfVertices[i] = tempVertex;
 			
@@ -131,9 +190,9 @@ public class Graph {
 	}
 	
 	public void showListOfVertices(){
-		for(int i = 0; i < this.totalNumberOfVertices; i++){
+		/*for(int i = 0; i < this.totalNumberOfVertices; i++){
 			System.out.println("vertex " + listOfVertices[i].getNumber() +" x: "+ listOfVertices[i].getX()+ " y: "	+ listOfVertices[i].getY()); 
-		}
+		}*/
 	}
 	
 	public void showListRepresentation(){
@@ -149,11 +208,33 @@ public class Graph {
 
 	public void draw(Graphics2D g2d) {
 		for(int i = 0 ; i < this.totalNumberOfVertices; i++){
-			g2d.drawRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
+			 
+			if(this.listOfVertices[i].getType()==1){
+				g2d.setColor( Color.GREEN);
+				g2d.drawRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
+						this.tileWidth, this.tileHeight);
+				g2d.drawString("X", 
+						this.listOfVertices[i].getY()+6, this.listOfVertices[i].getX()+30 );
+			}
+			 
+			if(this.listOfVertices[i].getType()==2){
+				g2d.setColor( Color.BLUE);
+				g2d.drawRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
+						this.tileWidth, this.tileHeight);
+				g2d.drawString("Y", 
+						this.listOfVertices[i].getY()+6, this.listOfVertices[i].getX()+30 );
+			}
+			
+		
+			if(this.listOfVertices[i].getType()==0){
+				g2d.setColor( Color.DARK_GRAY);
+				g2d.drawRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
 						this.tileWidth, this.tileHeight);
 			
-			g2d.drawString( String.format( "%s", this.listOfVertices[i].getNumber() ), 
-						this.listOfVertices[i].getY()+6, this.listOfVertices[i].getX()+30 );
+				g2d.drawString( String.format( "%s", this.listOfVertices[i].getNumber() ), 
+							this.listOfVertices[i].getY()+6, this.listOfVertices[i].getX()+30 );
+			}
+			
 		}
 		
 	}
