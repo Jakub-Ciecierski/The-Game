@@ -50,7 +50,7 @@ public class SimpleGame {
 	    this.totalTime = 0;
 	    this.curTime = System.currentTimeMillis();
 	    this.lastTime = curTime;
-		this.player = new Player(30,40,width,height);
+		this.player = new Player(30,40,this.width,this.height);
 		this.map = new Graph(this.width+30,this.height,30,40);
 		
 		createGameWindow();
@@ -119,8 +119,8 @@ public class SimpleGame {
     {
     	for(int i=0;i<this.map.listOfVertices.length;i++)
     		if(this.map.listOfVertices[i].getType()==1)
-    			if((this.map.listOfVertices[i].getY()-this.player.getX()<=30)&&(this.map.listOfVertices[i].getY()+30>this.player.getX()) && 
-    					(this.map.listOfVertices[i].getX()-this.player.getY()<=40) && (this.map.listOfVertices[i].getX()+40>this.player.getY()))
+    			if((this.map.listOfVertices[i].getY()-this.player.getX()<=this.player.getWidth())&&(this.map.listOfVertices[i].getY()+this.player.getWidth()>this.player.getX()) && 
+    					(this.map.listOfVertices[i].getX()-this.player.getY()<=this.player.getHeight()) && (this.map.listOfVertices[i].getX()+this.player.getHeight()>this.player.getY()))
     					return true;
     	return false;
     }

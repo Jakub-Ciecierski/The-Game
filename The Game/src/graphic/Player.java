@@ -24,7 +24,7 @@ public class Player {
 	Thread flyingUp;
 	Thread flyingDown;
 	
-	public Player(int width, int height,int screenWidth, int screenheight)
+	public Player(int width, int height,int screenWidth, int screenHeight)
 	{
 		this.width=width;
 		this.height=height;
@@ -32,13 +32,23 @@ public class Player {
 		this.screenHeight = screenHeight;
 		this.x= this.screenWidth/2 - this.width/2;
 		this.y= this.screenHeight/2 - this.height/2;
-		this.y=0;
+		
 		this.playerColor=Color.red;
 		isInit=true;
-		this.state=0;
+		
 		
 		// player starts flying down
 		this.state=0;
+	}
+	
+	int getWidth()
+	{
+		return this.width;
+	}
+	
+	int getHeight()
+	{
+		return this.height;
 	}
 	
 	int getX()
