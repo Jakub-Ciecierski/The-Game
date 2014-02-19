@@ -173,7 +173,8 @@ public class Graph {
 				if(v<numberOfVerticesInColumn-1)
 				{
 					Random randSide = new Random();
-					int side = randSide.nextInt(1);
+					int side = randSide.nextInt(2);
+					
 					if(side==0)
 						v++;
 					else
