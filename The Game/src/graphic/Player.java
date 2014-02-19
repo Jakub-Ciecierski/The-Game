@@ -14,20 +14,26 @@ public class Player {
 	private int y;
 	private int width;
 	private int height;
+	private int speed;
+	
 	private Color playerColor;
+	private boolean isInit;
+	private int state;
+	
 	Thread flyingUp;
 	Thread flyingDown;
-	boolean isInit;
-	private int state; //flying up 1, flying down 0
 	
-	public Player(int width, int height)
+	public Player(int width, int height,int speed)
 	{
+		this.setSpeed(speed);
 		this.width=width;
 		this.height=height;
 		this.x=0;
 		this.y=0;
 		this.playerColor=Color.red;
 		isInit=true;
+		
+		// player starts flying down
 		this.state=0;
 	}
 	
@@ -38,22 +44,39 @@ public class Player {
 		return state;
 	}
 	
-	void setState(int state)
-	{
-		this.state = state;
-	}
-	
 	int[] getPosition()
 	{
 		int[] positions ={x,y,x+width,y+height};
 		return positions; 
 	}
 	
+	int getSpeed()
+	{
+		return this.speed;
+	}
+	
+	void setSpeed(int speed)
+	{
+		this.speed=speed;
+	}
+	
+	void setState(int state)
+	{
+		this.state = state;
+	}
+	
+	public boolean checkColision(int x,int y,int width,int height)
+	{
+		if((x-this.x<=this.width)&&(x+width>this.x) && (y-this.y<=this.height) && (y+height>this.y))
+				return true;
+		return false;
+	}
+	
 	public void refreshPlayer(Graphics2D g2d)
 	{
 		g2d.setColor(playerColor);
 		g2d.fillRect(x,y,width,height);
-		
+	
 		g2d.setFont( new Font( "Courier New", Font.PLAIN, 16 ) );
 	    g2d.setColor( Color.GREEN );
 		if(getState()==0)
@@ -66,9 +89,9 @@ public class Player {
 		
 		// Reset the coords
 		if(x>779)
-			x=0;
+			x=-width;
 		if(y>399)
-			y=0;
+			y=-height;
 		if(y<0-height)
 			y=399;
 		
@@ -118,17 +141,17 @@ public class Player {
 	{
 		public void run()
 		{
+			
 			while(true)
 			{
 				x++;
 				y++;
-				
 				try {
-					flyingDown.sleep(5);
+					flyingDown.sleep(speed);
 				} catch (InterruptedException e) {
 					break;
 				}
-				
+			
 				if(isInterrupted())
 					break;
 			}
@@ -139,13 +162,14 @@ public class Player {
 	{
 		public void run()
 		{
+			
 			while(true)
 			{
 				y--;
 				x++;
-				
+			
 				try {
-					flyingUp.sleep(5);
+					flyingUp.sleep(speed);
 				} catch (InterruptedException e) {
 					break;
 					}

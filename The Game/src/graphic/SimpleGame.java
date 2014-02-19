@@ -48,7 +48,7 @@ public class SimpleGame {
 	    this.totalTime = 0;
 	    this.curTime = System.currentTimeMillis();
 	    this.lastTime = curTime;
-		this.player = new Player(50,50);
+		this.player = new Player(25,25,25);
 		
 		
 		createGameWindow();
@@ -141,10 +141,14 @@ public class SimpleGame {
 		    
 		    // add moving player
 		    this.player.refreshPlayer(this.g2d);
+		    
+		    // obstacle
 		    this.g2d.setColor( Color.BLUE );
 		    this.g2d.fillRect(width/2, height/2, 50, 50);
+		    if(player.checkColision(width/2,height/2,50, 50))
+		    	break;
+		 
 		    
-		    	
 		    // display frames per second...
 		    this.g2d.setFont( new Font( "Courier New", Font.PLAIN, 12 ) );
 		    this.g2d.setColor( Color.GREEN );
