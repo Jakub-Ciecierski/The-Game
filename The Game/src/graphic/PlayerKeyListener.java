@@ -12,14 +12,14 @@ public class PlayerKeyListener implements KeyListener{
 	}
 	
 	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode()==e.VK_SPACE)
-			this.player.activateBoost();
+		/*if(e.getKeyCode()==e.VK_SPACE)
+			this.player.activateBoost();*/
 		
 	}
 
 	public void keyReleased(KeyEvent e) {
-		if(e.getKeyCode()==e.VK_SPACE)
-			this.player.deactiveteBoost();
+		/*if(e.getKeyCode()==e.VK_SPACE)
+			this.player.deactiveteBoost();*/
 		
 	}
 

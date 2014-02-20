@@ -21,6 +21,10 @@ class PlayerMouseListener implements MouseListener{
     		player.stopFlyingDown();
     		player.flyUp();
     	}
+    	if(e.getButton()==e.BUTTON3)
+    	{
+    		this.player.activateBoost();
+    	}
     }
 
     public void mouseReleased(MouseEvent e) {
@@ -28,6 +32,10 @@ class PlayerMouseListener implements MouseListener{
     	{
     		player.stopFlyingUp();
     		player.flyDown();
+    	}
+    	if(e.getButton()==e.BUTTON3)
+    	{
+    		this.player.deactiveteBoost();
     	}
     }
 

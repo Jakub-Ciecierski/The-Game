@@ -10,6 +10,7 @@ public class FlyingUp extends Thread
 		{
 			this.player=player;
 			this.speed=1;
+			T=null;
 		}
 		
 		int getSpeed()
@@ -20,6 +21,11 @@ public class FlyingUp extends Thread
 		void setSpeed(int n)
 		{
 			this.speed=n;
+		}
+		
+		public boolean isActive()
+		{
+			return (T==null?false:true);
 		}
 		
 		public void init()

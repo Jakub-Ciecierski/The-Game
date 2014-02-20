@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.math.BigDecimal;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -51,7 +52,7 @@ public class SimpleGame {
 	    this.curTime = System.currentTimeMillis();
 	    this.lastTime = curTime;
 		this.player = new Player(30,40,this.width,this.height);
-		this.map = new Graph(this.width+30,this.height,30,40);
+		this.map = new Graph(this.width+60,this.height,30,40,g2d);
 		
 		createGameWindow();
 		createCanvas();
@@ -173,7 +174,7 @@ public class SimpleGame {
 		    this.g2d.setFont( new Font( "Courier New", Font.PLAIN, 12 ) );
 		    this.g2d.setColor( Color.GREEN );
 		    this.g2d.drawString( String.format( "FPS: %s", fps ), 20, 20 );
-		                
+		    this.g2d.drawString( "Score : "+ this.map.getScore(), 20, 80 );
 		    // Blit image and flip...
 		    this.graphics = this.bufferStrategy.getDrawGraphics();
 		    this.graphics.drawImage( this.offScreenImage, 0, 0, null );

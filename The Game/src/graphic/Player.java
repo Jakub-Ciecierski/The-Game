@@ -24,10 +24,8 @@ public class Player {
 	
 	FlyingUp flyingUp;
 	FlyingDown flyingDown;
-	
-	//Thread flyingUp;
-	//Thread flyingDown;
-	Thread speedBoost;
+	SpeedBoost speedBoost;
+
 	
 	boolean isBoostUp;
 	
@@ -46,7 +44,7 @@ public class Player {
 		
 		flyingUp=new FlyingUp(this);
 		flyingDown=new FlyingDown(this);
-		
+		speedBoost = new SpeedBoost(this);
 		// player starts flying down
 		this.state=0;
 	}
@@ -72,7 +70,7 @@ public class Player {
 	}
 	
 	/*Returns the State of player
-	flying up 1,flying down 0*/
+	speed boost 2,flying up 1,flying down 0*/
 	public int getState()
 	{
 		return state;
@@ -128,11 +126,13 @@ public class Player {
 	    g2d.setColor( Color.GREEN );
 		if(getState()==0)
 			g2d.drawString("Flying down", 20, 35);
-		else
+		if(getState()==1)
 			g2d.drawString("Flying up", 20, 35);
+		if(getState()==2)
+			g2d.drawString("Speed Boost!", 20, 35);
 		
 		g2d.drawString("x: "+x+" y: "+y, 20, 50);
-		
+		g2d.drawString("Boost Fuel: "+speedBoost.getBoostFuel(),20,65);
 		
 		// Reset the coords
 		/*if(x>779-width)
@@ -159,13 +159,14 @@ public class Player {
 	
 	public void stopFlyingDown()
 	{
-		setState(1);
+		
 		flyingDown.stopThread();
 	}
 	
 	public void flyUp()
 	
 	{
+		setState(1);
 		flyingUp.init();
 	}
 	
@@ -176,19 +177,12 @@ public class Player {
 	
 	public void activateBoost()
 	{
-		//System.out.println("Boost activated");
-		speedBoost= new SpeedBoost(this);
-		speedBoost.start();
+		speedBoost.init();
 	}
 	
 	public void deactiveteBoost()
 	{
-		//System.out.println("Boost deactivated");
-		if(speedBoost!=null)
-		{
-			speedBoost.interrupt();
-			speedBoost=null;
-		}
+		speedBoost.stopThread();
 	}
 	
 }
