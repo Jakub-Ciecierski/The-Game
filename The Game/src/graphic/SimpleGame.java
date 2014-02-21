@@ -26,6 +26,8 @@ public class SimpleGame {
     long totalTime;
     long curTime;
     long lastTime;
+    int speed;
+    
     JFrame app;
 	Canvas canvas;
 	BufferStrategy bufferStrategy;
@@ -38,6 +40,7 @@ public class SimpleGame {
     Color backgroundColor;
     
     Player player;
+    SlowMotion slowMotion;
     Graph map;
    
     
@@ -54,6 +57,9 @@ public class SimpleGame {
 		this.player = new Player(30,40,this.width,this.height);
 		this.map = new Graph(this.width+60,this.height,30,40,g2d);
 		
+		this.speed =3;
+		this.slowMotion=new SlowMotion(this);
+		
 		createGameWindow();
 		createCanvas();
 		addCanvasToWindow();
@@ -63,6 +69,21 @@ public class SimpleGame {
 		
 	}
     
+	public void setSpeed(int s)
+	{
+		this.speed=s;
+	}
+	
+	public int getSpeed()
+	{
+		return this.speed;
+	}
+	
+	public void activateSlowMotion()
+	{
+		slowMotion.init();
+	}
+	
 	private void createOffScreen() {
 		
 		this.offScreenImage = 
@@ -104,7 +125,7 @@ public class SimpleGame {
 		this.canvas.setIgnoreRepaint(true);
 		this.canvas.setSize( this.width, this.height );
 		this.canvas.addMouseListener(new PlayerMouseListener(this.player));
-		this.canvas.addKeyListener(new PlayerKeyListener(this.player));
+		this.canvas.addKeyListener(new PlayerKeyListener(this));
 	}
     
     
@@ -157,7 +178,7 @@ public class SimpleGame {
 		    
 		 
 		    //display map
-	        if(this.frames %3 == 0)
+	        if(this.frames %this.getSpeed() == 0)
 	        	this.map.updatePosition();
 	        this.g2d.setColor( Color.DARK_GRAY);
 	        this.map.draw(g2d);

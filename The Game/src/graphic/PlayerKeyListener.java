@@ -4,16 +4,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class PlayerKeyListener implements KeyListener{
-	Player player;
+	SimpleGame simpleGame;
 	
-	PlayerKeyListener (Player player)
+	PlayerKeyListener (SimpleGame simpleGame)
 	{
-		this.player=player;
+		this.simpleGame = simpleGame;
 	}
 	
 	public void keyPressed(KeyEvent e) {
-		/*if(e.getKeyCode()==e.VK_SPACE)
-			this.player.activateBoost();*/
+		if(e.getKeyCode()==e.VK_SPACE)
+			this.simpleGame.activateSlowMotion();
 		
 	}
 

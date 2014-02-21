@@ -5,6 +5,18 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Random;
 
+/*
+ * !!!!
+ * 0 - type: sky, does nothing, it is part of the graph, p[layer can
+ * 		freely move across this type of tiles
+ * 1 - type: obstacle, not part of the graph,  player dies when he 
+ * 		touches this one
+ * 2 - type: NONE, not part of the graph, player has no contact with 
+ * 		that kind of tiles, symbolizes "napierdalajacy kosmos".
+ */
+
+
+
 public class Graph {
 	
 	int screenWidth;
@@ -22,6 +34,9 @@ public class Graph {
 	int rangeOfObstacle;
 	int previousObstacle;
 	int previousGap;
+	
+	ArrayList<FallingTile> listOfFallingTiles;
+	boolean itIsTimeToCheck;
 	
 	public Graph(int screenWidth, int screenHeight, int tileWidth,
 			int titleHeight, Graphics2D g2d) {
@@ -44,7 +59,9 @@ public class Graph {
 		
 		createVertices();
 		createListRepresentation();
-				
+		
+		this.listOfFallingTiles = new ArrayList<FallingTile>();
+		this.itIsTimeToCheck = true;
 				
 		System.out.println("I have created graph with "
 				+ this.numberOfVerticesInRow + " vertices in row and "
@@ -138,6 +155,7 @@ public class Graph {
 		 * Necessary for algorithms based on graph's structure
 		 */
 		createListRepresentation();
+		this.itIsTimeToCheck = true;
 	}
 	
 	/*
@@ -278,8 +296,8 @@ public class Graph {
 				g2d.setColor( Color.GREEN);
 				g2d.drawRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
 						this.tileWidth, this.tileHeight);
-				g2d.drawString("X", 
-						this.listOfVertices[i].getY()+6, this.listOfVertices[i].getX()+30 );
+				//g2d.drawString("X", 
+						//this.listOfVertices[i].getY()+6, this.listOfVertices[i].getX()+30 );
 			}
 			 
 			if(this.listOfVertices[i].getType()==2){
@@ -292,6 +310,9 @@ public class Graph {
 			
 		
 			if(this.listOfVertices[i].getType()==0){
+				//g2d.setColor( Color.BLACK);
+				//g2d.fillRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
+					//	this.tileWidth, this.tileHeight);
 				g2d.setColor( Color.DARK_GRAY);
 				g2d.drawRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
 						this.tileWidth, this.tileHeight);
@@ -301,10 +322,21 @@ public class Graph {
 			}
 			/*___DRAW_GRAPH'S_NET___*/
 			//drawNet(i,g2d);
-			/*___DRAW_FALLING_TILES___*/
+			
 			
 		
 			
+		}
+		/*___DRAW_FALLING_TILES___*/
+		for(int i=0; i < this.listOfFallingTiles.size();i++)
+		{
+			if(this.listOfFallingTiles.get(i).getType() == 1)
+				g2d.setColor(Color.GREEN);
+			if(this.listOfFallingTiles.get(i).getType() == 0)
+				g2d.setColor(Color.RED);
+			
+			g2d.drawRect(this.listOfFallingTiles.get(i).getX(), this.listOfFallingTiles.get(i).getY(), 
+					this.tileWidth, this.tileHeight);
 		}
 		
 	}
@@ -377,33 +409,67 @@ public class Graph {
 				theMomentOfDybisz();
 				//showListOfVertices();
 			}
-			/*___FADING_TILES___*/
-			fadingTiles();
+			
 			
 					
+		}
+		/*___FADING_TILES___*/
+		fadingTiles();
+		/*___UPDATING_TILES___*/
+		for(int i=0; i < this.listOfFallingTiles.size();i++)
+		{
+			/*___IF_TILE_IS_OFF_SCREEN___*/
+			if(this.listOfFallingTiles.get(i).getY()>this.screenHeight)
+				this.listOfFallingTiles.remove(i);
+			/*___IF_TILE_IS_STILL_NEEDED___*/
+			else
+				{
+					this.listOfFallingTiles.get(i).incrementY();
+					this.listOfFallingTiles.get(i).incrementX();
+				}
 		}
 		
 		
 		
 	}
 
-	
-	
+
+	/**
+	 * U-a, big one! This method simply swaps appropriate tile to type 
+	 * NONE and inserts new @FallingTile in this place. This gives us
+	 * an effect of destroying left side of the the screen.
+	 */
 	private void fadingTiles() {
-		for(int k = 1 ; k < 10; k++)
-			if(this.listOfVertices[(this.numberOfVerticesInColumn-k)*this.numberOfVerticesInColumn].getY()
-					< (this.tileWidth*(this.numberOfVerticesInColumn-k-1)))
-			{
-				/*___SAVE_PREVIOUS_TYPE___*/
-				int previousType = this.listOfVertices[(this.numberOfVerticesInColumn-k)
-				   				                    *this.numberOfVerticesInColumn + k -1].getType();
-				
-				/*___CHANGE TYPE_OF_APPROPRIATE_TILE___*/
-				this.listOfVertices[(this.numberOfVerticesInColumn-k)
-				                    *this.numberOfVerticesInColumn + k -1].setType(2);
-				
-			}
 		
+		/*
+		 * An adequate moment to check is invoke by @theMomentOfDybisz()
+		 */
+		if(this.itIsTimeToCheck)
+		{
+			for(int k = 1 ; k < 10; k++)
+				if(this.listOfVertices[(this.numberOfVerticesInColumn-k)*this.numberOfVerticesInColumn].getY()
+						< (this.tileWidth*(this.numberOfVerticesInColumn-k-1)))
+				{
+					
+					/*___SAVE_PREVIOUS_TYPE___*/
+					int previousType = this.listOfVertices[(this.numberOfVerticesInColumn-k)
+					   				                    *this.numberOfVerticesInColumn + k -1].getType();
+					
+					/*___CHANGE TYPE_OF_APPROPRIATE_TILE___*/
+					this.listOfVertices[(this.numberOfVerticesInColumn-k)
+					                    *this.numberOfVerticesInColumn + k -1].setType(2);
+									
+					/*____ADD_NEW_TILE_TO_FALL___*/
+					this.listOfFallingTiles.add(new FallingTile(
+							this.listOfVertices[(this.numberOfVerticesInColumn-k)
+			   				                    *this.numberOfVerticesInColumn + k -1].getY(),this.listOfVertices[(this.numberOfVerticesInColumn-k)
+			   				                    *this.numberOfVerticesInColumn + k -1].getX(), previousType,"RANDOMXY"));
+					
+					
+					
+				}
+			this.itIsTimeToCheck = false;
+		}
 		}
 		
 	
