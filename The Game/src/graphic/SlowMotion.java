@@ -1,5 +1,7 @@
 package graphic;
-
+/*
+ * TO DO:Slow motion cooldown
+ */
 public class SlowMotion	extends Thread {
 	SimpleGame simpleGame;
 	Thread T;

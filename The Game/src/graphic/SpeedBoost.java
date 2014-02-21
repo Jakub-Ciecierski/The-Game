@@ -99,11 +99,16 @@ public class SpeedBoost extends Thread
 		}
 		player.flyingUp.setSpeed(1);
 		
+		/*
+		 * set the proper state of player
+		 */
 		if(player.flyingUp.isActive())
 			player.setState(1);
 		else
 			player.setState(0);
-		
+		/*
+		 * make sure that the thread is stoped after the fuel reserve has been depleted
+		 */
 		this.stopThread();
 	}
 	

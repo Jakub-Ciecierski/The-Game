@@ -8,12 +8,10 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.math.BigDecimal;
-import java.util.Random;
 
 import javax.swing.JFrame;
 
@@ -35,10 +33,12 @@ public class SimpleGame {
 	GraphicsDevice graphicsDevice;
     GraphicsConfiguration graphicsConfiguration;
     BufferedImage offScreenImage;
+    Image backgroundSpace;
     Graphics graphics;
     Graphics2D g2d;
     Color backgroundColor;
     
+    BitMap bitMap;
     Player player;
     SlowMotion slowMotion;
     Graph map;
@@ -54,10 +54,11 @@ public class SimpleGame {
 	    this.totalTime = 0;
 	    this.curTime = System.currentTimeMillis();
 	    this.lastTime = curTime;
-		this.player = new Player(30,40,this.width,this.height);
-		this.map = new Graph(this.width+60,this.height,30,40,g2d);
+	    this.bitMap= new BitMap();
+		this.player = new Player(30,40,this.width,this.height,bitMap);
+		this.map = new Graph(this.width+60,this.height,30,40,g2d,bitMap);
 		
-		this.speed =3;
+		this.speed =2;
 		this.slowMotion=new SlowMotion(this);
 		
 		createGameWindow();
@@ -66,9 +67,17 @@ public class SimpleGame {
 		createBackBufferStrategy();
 		setGraphicsConfiguration();
 		createOffScreen();
+		createBackgroundGif();
 		
 	}
     
+	private void createBackgroundGif() {
+		
+		Toolkit t = Toolkit.getDefaultToolkit ();
+	    this.backgroundSpace = t.createImage("starsNew.gif");
+		
+	}
+
 	public void setSpeed(int s)
 	{
 		this.speed=s;
@@ -170,11 +179,15 @@ public class SimpleGame {
 		    } 
 		
 		    ++(this.frames);
-		
+		    
 		    // clear back buffer...
 		    this.g2d = this.offScreenImage.createGraphics();
 		    this.g2d.setColor( this.backgroundColor );
 		    this.g2d.fillRect( 0, 0, this.width, this.height );
+		    
+		    //draw background
+		    //this.g2d.drawImage(this.backgroundSpace, 0, 0, canvas);
+		    this.g2d.drawImage(this.backgroundSpace, 0, 0, app);
 		    
 		 
 		    //display map

@@ -38,8 +38,10 @@ public class Graph {
 	ArrayList<FallingTile> listOfFallingTiles;
 	boolean itIsTimeToCheck;
 	
+	BitMap bitMap;
+	
 	public Graph(int screenWidth, int screenHeight, int tileWidth,
-			int titleHeight, Graphics2D g2d) {
+			int titleHeight, Graphics2D g2d,BitMap bitMap) {
 		
 		super();
 		this.screenWidth = screenWidth;
@@ -51,6 +53,7 @@ public class Graph {
 		this.numberOfVerticesInColumn = this.screenHeight / this.tileHeight;
 		this.totalNumberOfVertices = (this.numberOfVerticesInColumn * this.numberOfVerticesInRow);
 		
+		this.bitMap=bitMap;
 		
 		this.counter=0;
 		this.previousObstacle=-1;
@@ -294,31 +297,38 @@ public class Graph {
 			 
 			if(this.listOfVertices[i].getType()==1){
 				g2d.setColor( Color.GREEN);
+				g2d.drawImage(this.bitMap.getObstacle(),this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), null);
+				/*
+				g2d.fillRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
+						this.tileWidth, this.tileHeight);
+				g2d.setColor( Color.DARK_GRAY);
 				g2d.drawRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
 						this.tileWidth, this.tileHeight);
+				*/
 				//g2d.drawString("X", 
 						//this.listOfVertices[i].getY()+6, this.listOfVertices[i].getX()+30 );
 			}
 			 
 			if(this.listOfVertices[i].getType()==2){
-				g2d.setColor( Color.BLUE);
+				//g2d.setColor( Color.BLUE);
 				//g2d.drawRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
 					//	this.tileWidth, this.tileHeight);
-				g2d.drawString("oo", 
-						this.listOfVertices[i].getY()+6, this.listOfVertices[i].getX()+30 );
+				//g2d.drawString("oo", 
+						//this.listOfVertices[i].getY()+6, this.listOfVertices[i].getX()+30 );
 			}
 			
 		
 			if(this.listOfVertices[i].getType()==0){
-				//g2d.setColor( Color.BLACK);
-				//g2d.fillRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
-					//	this.tileWidth, this.tileHeight);
+				g2d.setColor( Color.BLACK);
+				g2d.drawImage(bitMap.getBackground(), this.listOfVertices[i].getY(),this.listOfVertices[i].getX(), null);
+				/*g2d.fillRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
+						this.tileWidth, this.tileHeight);
 				g2d.setColor( Color.DARK_GRAY);
 				g2d.drawRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
 						this.tileWidth, this.tileHeight);
-			
-				g2d.drawString( String.format( "%s", this.listOfVertices[i].getNumber() ), 
-							this.listOfVertices[i].getY()+6, this.listOfVertices[i].getX()+30 );
+			*/
+				//g2d.drawString( String.format( "%s", this.listOfVertices[i].getNumber() ), 
+						//	this.listOfVertices[i].getY()+6, this.listOfVertices[i].getX()+30 );
 			}
 			/*___DRAW_GRAPH'S_NET___*/
 			//drawNet(i,g2d);
@@ -331,12 +341,31 @@ public class Graph {
 		for(int i=0; i < this.listOfFallingTiles.size();i++)
 		{
 			if(this.listOfFallingTiles.get(i).getType() == 1)
-				g2d.setColor(Color.GREEN);
+				{
+				g2d.drawImage(this.bitMap.getObstacle(),this.listOfFallingTiles.get(i).getX(), this.listOfFallingTiles.get(i).getY(), null);
+				/*
+					g2d.setColor(Color.GREEN);
+					g2d.fillRect(this.listOfFallingTiles.get(i).getX(), this.listOfFallingTiles.get(i).getY(), 
+							this.tileWidth, this.tileHeight);
+					g2d.setColor( Color.DARK_GRAY);
+					g2d.drawRect(this.listOfFallingTiles.get(i).getX(), this.listOfFallingTiles.get(i).getY(), 
+							this.tileWidth, this.tileHeight);
+				*/
+				}
 			if(this.listOfFallingTiles.get(i).getType() == 0)
-				g2d.setColor(Color.RED);
+				{
+				g2d.drawImage(this.bitMap.getBackground(),this.listOfFallingTiles.get(i).getX(), this.listOfFallingTiles.get(i).getY(), null);
+				/*
+				g2d.setColor( Color.BLACK);
+				g2d.fillRect(this.listOfFallingTiles.get(i).getX(), this.listOfFallingTiles.get(i).getY(), 
+						this.tileWidth, this.tileHeight);
+				g2d.setColor( Color.DARK_GRAY);
+				g2d.drawRect(this.listOfFallingTiles.get(i).getX(), this.listOfFallingTiles.get(i).getY(), 
+						this.tileWidth, this.tileHeight);
+				*/
+				}
 			
-			g2d.drawRect(this.listOfFallingTiles.get(i).getX(), this.listOfFallingTiles.get(i).getY(), 
-					this.tileWidth, this.tileHeight);
+			
 		}
 		
 	}

@@ -29,7 +29,9 @@ public class Player {
 	
 	boolean isBoostUp;
 	
-	public Player(int width, int height,int screenWidth, int screenHeight)
+	BitMap bitMap;
+	
+	public Player(int width, int height,int screenWidth, int screenHeight,BitMap bitMap)
 	{
 		this.width=width;
 		this.height=height;
@@ -47,6 +49,8 @@ public class Player {
 		speedBoost = new SpeedBoost(this);
 		// player starts flying down
 		this.state=0;
+		this.bitMap= bitMap;
+		
 	}
 	
 	public int getWidth()
@@ -120,8 +124,9 @@ public class Player {
 	public void refreshPlayer(Graphics2D g2d)
 	{
 		g2d.setColor(playerColor);
-		g2d.fillRect(x,y,width,height);
-	
+		//g2d.fillRect(x,y,width,height);
+		g2d.drawImage(bitMap.getHero(), x, y, null);
+		
 		g2d.setFont( new Font( "Courier New", Font.PLAIN, 16 ) );
 	    g2d.setColor( Color.GREEN );
 		if(getState()==0)
