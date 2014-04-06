@@ -1,44 +1,30 @@
 package graphic;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
 public class FallingTile {
 	
 	int x;
 	int y;
-	int type;
 	int speedX;
 	int speedY;
+	BufferedImage image;
 
-	
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-		
-	}
-
-	public FallingTile(int x, int y, int type, String typeOfBehaviour) {
+	public FallingTile(int x, int y, BufferedImage img) {
 		super();
 		this.x = x;
 		this.y = y;
-		this.type = type;
-		if(typeOfBehaviour == "RANDOMXY")
-		{
-			this.speedX = randomizeSpeed();
-			this.speedY = randomizeSpeed();
-		}
-		if(typeOfBehaviour == "RANDOMY")
-		{
-			this.speedX = 1;
-			this.speedY = randomizeSpeed();
-		}
-		if(typeOfBehaviour == "DEFAULT")
-		{
-			this.speedX = 1;
-			this.speedY = 2;
-		}
 		
+		this.speedX = randomizeSpeed();
+		this.speedY = randomizeSpeed();
+		this.image = img;
+	
+		
+	}
+	
+	public void render(Graphics2D g2d){
+		g2d.drawImage(image,this.x, this.y, null);
 	}
 	
 	private int randomizeSpeed(){

@@ -1,12 +1,12 @@
 package graphic;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
 
-import javax.swing.JFrame;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 
 public class Player {
 	
@@ -16,7 +16,7 @@ public class Player {
 	private int height;
 	private int speed;
 	
-	private Color playerColor;
+	
 	private boolean isInit;
 	private int state;
 	private int screenWidth;
@@ -28,10 +28,10 @@ public class Player {
 
 	
 	boolean isBoostUp;
+	BufferedImage image;
+
 	
-	BitMap bitMap;
-	
-	public Player(int width, int height,int screenWidth, int screenHeight,BitMap bitMap)
+	public Player(int width, int height,int screenWidth, int screenHeight)
 	{
 		this.width=width;
 		this.height=height;
@@ -40,7 +40,7 @@ public class Player {
 		this.x= this.screenWidth/2 - this.width/2;
 		this.y= this.screenHeight/2 - this.height/2;
 		
-		this.playerColor=Color.red;
+		
 		isInit=true;
 		isBoostUp=false;
 		
@@ -49,7 +49,8 @@ public class Player {
 		speedBoost = new SpeedBoost(this);
 		// player starts flying down
 		this.state=0;
-		this.bitMap= bitMap;
+		loadImage();
+		
 		
 	}
 	
@@ -123,9 +124,9 @@ public class Player {
 	
 	public void refreshPlayer(Graphics2D g2d)
 	{
-		g2d.setColor(playerColor);
+		//g2d.setColor(playerColor);
 		//g2d.fillRect(x,y,width,height);
-		g2d.drawImage(bitMap.getHero(), x, y, null);
+		g2d.drawImage(this.image, x, y, null);
 		
 		g2d.setFont( new Font( "Courier New", Font.PLAIN, 16 ) );
 	    g2d.setColor( Color.GREEN );
@@ -155,6 +156,23 @@ public class Player {
 		}
 		
 	}
+	
+	private void loadImage(){
+		
+			
+			try 
+			{
+				this.image = ImageIO.read( getClass().getResource("/images/hero.png") );
+				
+			}
+			catch(IOException e) {
+				System.out.println("Load Image error:");
+			}
+			
+			
+		
+	}
+	
 	public void flyDown()
 	{ 
 		setState(0);

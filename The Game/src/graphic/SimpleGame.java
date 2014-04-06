@@ -12,7 +12,6 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-
 import javax.swing.JFrame;
 
 public class SimpleGame {
@@ -38,7 +37,6 @@ public class SimpleGame {
     Graphics2D g2d;
     Color backgroundColor;
     
-    BitMap bitMap;
     Player player;
     SlowMotion slowMotion;
     Graph map;
@@ -54,9 +52,8 @@ public class SimpleGame {
 	    this.totalTime = 0;
 	    this.curTime = System.currentTimeMillis();
 	    this.lastTime = curTime;
-	    this.bitMap= new BitMap();
-		this.player = new Player(30,40,this.width,this.height,bitMap);
-		this.map = new Graph(this.width+60,this.height,30,40,g2d,bitMap);
+	    this.player = new Player(30,40,this.width,this.height);
+		this.map = new Graph(this.width+60,this.height,30,40,g2d);
 		
 		this.speed =2;
 		this.slowMotion=new SlowMotion(this);
@@ -112,7 +109,7 @@ public class SimpleGame {
 	    this.backgroundColor = Color.BLACK;
 		
 	}
-
+	
 	private void createBackBufferStrategy() {
 		
 		this.canvas.createBufferStrategy(2);
@@ -201,8 +198,8 @@ public class SimpleGame {
 		    this.player.refreshPlayer(this.g2d);
 		    this.g2d.setColor( Color.BLUE );
 		    
-		    if(checkColision())
-		    	break;
+		    //if(checkColision())
+		    	//break;
 		    	
 		    // display frames per second...
 		    this.g2d.setFont( new Font( "Courier New", Font.PLAIN, 12 ) );

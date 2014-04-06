@@ -2,8 +2,12 @@ package graphic;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
 
 /*
  * !!!!
@@ -27,7 +31,7 @@ public class Graph {
 	int numberOfVerticesInColumn;
 	int totalNumberOfVertices;
 	int netLineConstant;
-	Vertex[] listOfVertices;
+	static Vertex[] listOfVertices;
 	ArrayList<ArrayList<Vertex>> listRepresentation;
 	
 	int counter;
@@ -38,10 +42,12 @@ public class Graph {
 	ArrayList<FallingTile> listOfFallingTiles;
 	boolean itIsTimeToCheck;
 	
-	BitMap bitMap;
+	
+	//static array of images for tiles
+	static BufferedImage[] listOfImages;
 	
 	public Graph(int screenWidth, int screenHeight, int tileWidth,
-			int titleHeight, Graphics2D g2d,BitMap bitMap) {
+			int titleHeight, Graphics2D g2d) {
 		
 		super();
 		this.screenWidth = screenWidth;
@@ -53,13 +59,15 @@ public class Graph {
 		this.numberOfVerticesInColumn = this.screenHeight / this.tileHeight;
 		this.totalNumberOfVertices = (this.numberOfVerticesInColumn * this.numberOfVerticesInRow);
 		
-		this.bitMap=bitMap;
+		
+		
 		
 		this.counter=0;
 		this.previousObstacle=-1;
 		this.previousGap=-1;
 		this.rangeOfObstacle = 6;
 		
+		createListOfImages();
 		createVertices();
 		createListRepresentation();
 		
@@ -76,6 +84,23 @@ public class Graph {
 		return this.counter;
 	}
 	
+	private void createListOfImages(){
+		
+		try 
+		{
+			BufferedImage background = ImageIO.read( getClass().getResource("/images/bc.png") );
+			BufferedImage obstacle= ImageIO.read( getClass().getResource("/images/obstacle.png") );
+			Graph.listOfImages = new BufferedImage[2];
+			Graph.listOfImages[0] = background;
+			Graph.listOfImages[1] = obstacle;
+		}
+		catch(IOException e) {
+			System.out.println("Load Image error:");
+		}
+		
+		
+	}
+	
 	private void createListRepresentation() {
 		this.listRepresentation = new ArrayList<ArrayList<Vertex>>();
 		
@@ -84,20 +109,20 @@ public class Graph {
 			ArrayList<Vertex> tempArrayList = new ArrayList<Vertex>();
 			
 			/*___IF OUR_VERTEX_IS_NOT_AN_OBSTACLE_OR_A_NONE___*/
-				if(this.listOfVertices[i].getType() != 1 && this.listOfVertices[i].getType() != 2)
+				if(Graph.listOfVertices[i].getType() != 1 && Graph.listOfVertices[i].getType() != 2)
 				{
 					/*__RIGHT__*/
-					if(!(i >= (this.totalNumberOfVertices - this.numberOfVerticesInColumn)) && this.listOfVertices[i+this.numberOfVerticesInColumn].getType() !=1)
-						tempArrayList.add(this.listOfVertices[i+this.numberOfVerticesInColumn]);
+					if(!(i >= (this.totalNumberOfVertices - this.numberOfVerticesInColumn)) && Graph.listOfVertices[i+this.numberOfVerticesInColumn].getType() !=1)
+						tempArrayList.add(Graph.listOfVertices[i+this.numberOfVerticesInColumn]);
 					/*__LEFT__*/
-					 if(!(i < this.numberOfVerticesInColumn) && this.listOfVertices[i-this.numberOfVerticesInColumn].getType() != 1)
-						tempArrayList.add(this.listOfVertices[i-this.numberOfVerticesInColumn]);
+					 if(!(i < this.numberOfVerticesInColumn) && Graph.listOfVertices[i-this.numberOfVerticesInColumn].getType() != 1)
+						tempArrayList.add(Graph.listOfVertices[i-this.numberOfVerticesInColumn]);
 					/*__UP__*/
-					if(!(i% this.numberOfVerticesInColumn == 0) && this.listOfVertices[i-1].getType() != 1)
-						tempArrayList.add(this.listOfVertices[i-1]);
+					if(!(i% this.numberOfVerticesInColumn == 0) && Graph.listOfVertices[i-1].getType() != 1)
+						tempArrayList.add(Graph.listOfVertices[i-1]);
 					/*__DOWN__*/
-					if(!(i % this.numberOfVerticesInColumn == (this.numberOfVerticesInColumn - 1)) && this.listOfVertices[i+1].getType() != 1)
-						tempArrayList.add(this.listOfVertices[i+1]);
+					if(!(i % this.numberOfVerticesInColumn == (this.numberOfVerticesInColumn - 1)) && Graph.listOfVertices[i+1].getType() != 1)
+						tempArrayList.add(Graph.listOfVertices[i+1]);
 								
 				}
 			/*________________________________________*/
@@ -108,16 +133,7 @@ public class Graph {
 				
 	}
 
-	
-	/*
-	public static void main(String[] args) {
-		Graph map = new Graph(180,150,30,30);
-		map.theMomentOfDybisz();
-		//map.theMomentOfDybisz();
-		map.showListOfVertices();
-		//map.showListRepresentation();
-	}
-	*/
+
 	
 	/**
 	 * Special method for the illusion of constant movement.
@@ -128,15 +144,15 @@ public class Graph {
 		
 		for(int i = 0 ; i < this.totalNumberOfVertices ; i++){
 			if(i< this.numberOfVerticesInColumn){
-				tempArray[i] = this.listOfVertices[i];
+				tempArray[i] = Graph.listOfVertices[i];
 			}
 			if(i>= this.numberOfVerticesInColumn
 					){
-				this.listOfVertices[i-this.numberOfVerticesInColumn] = this.listOfVertices[i];
+				Graph.listOfVertices[i-this.numberOfVerticesInColumn] = Graph.listOfVertices[i];
 			}
 			if(i >=(this.totalNumberOfVertices - this.numberOfVerticesInColumn)){
-				this.listOfVertices[i] = tempArray[j];
-				this.listOfVertices[i].setY(this.listOfVertices[i-this.numberOfVerticesInColumn].getY() + this.tileWidth);
+				Graph.listOfVertices[i] = tempArray[j];
+				Graph.listOfVertices[i].setY(Graph.listOfVertices[i-this.numberOfVerticesInColumn].getY() + this.tileWidth);
 				
 				
 				j++;
@@ -255,7 +271,7 @@ public class Graph {
 	
 	private void createVertices(){
 				
-		this.listOfVertices = 
+		Graph.listOfVertices = 
 				new Vertex[this.totalNumberOfVertices];
 		
 		/*
@@ -267,7 +283,7 @@ public class Graph {
 			int tempX = (i % this.numberOfVerticesInColumn) * this.tileHeight;
 			int tempY = i/this.numberOfVerticesInColumn;
 			tempY = tempY * tileWidth;
-			Vertex tempVertex = new Vertex(i, 0, tempX, tempY);
+			Vertex tempVertex = new Vertex(i, 0, tempX, tempY, Graph.listOfImages);
 			
 			listOfVertices[i] = tempVertex;
 			
@@ -293,83 +309,19 @@ public class Graph {
 
 
 	public void draw(Graphics2D g2d) {
-		for(int i = 0 ; i < this.totalNumberOfVertices; i++){
-			 
-			if(this.listOfVertices[i].getType()==1){
-				g2d.setColor( Color.GREEN);
-				g2d.drawImage(this.bitMap.getObstacle(),this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), null);
-				/*
-				g2d.fillRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
-						this.tileWidth, this.tileHeight);
-				g2d.setColor( Color.DARK_GRAY);
-				g2d.drawRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
-						this.tileWidth, this.tileHeight);
-				*/
-				//g2d.drawString("X", 
-						//this.listOfVertices[i].getY()+6, this.listOfVertices[i].getX()+30 );
-			}
-			 
-			if(this.listOfVertices[i].getType()==2){
-				//g2d.setColor( Color.BLUE);
-				//g2d.drawRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
-					//	this.tileWidth, this.tileHeight);
-				//g2d.drawString("oo", 
-						//this.listOfVertices[i].getY()+6, this.listOfVertices[i].getX()+30 );
-			}
-			
 		
-			if(this.listOfVertices[i].getType()==0){
-				g2d.setColor( Color.BLACK);
-				g2d.drawImage(bitMap.getBackground(), this.listOfVertices[i].getY(),this.listOfVertices[i].getX(), null);
-				/*g2d.fillRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
-						this.tileWidth, this.tileHeight);
-				g2d.setColor( Color.DARK_GRAY);
-				g2d.drawRect(this.listOfVertices[i].getY(), this.listOfVertices[i].getX(), 
-						this.tileWidth, this.tileHeight);
-			*/
-				//g2d.drawString( String.format( "%s", this.listOfVertices[i].getNumber() ), 
-						//	this.listOfVertices[i].getY()+6, this.listOfVertices[i].getX()+30 );
-			}
-			/*___DRAW_GRAPH'S_NET___*/
-			//drawNet(i,g2d);
-			
-			
+		/*___DRAW_MAP___*/
+		for(int i = 0 ; i < this.totalNumberOfVertices; i++)
+			Graph.listOfVertices[i].render(g2d);
 		
-			
-		}
 		/*___DRAW_FALLING_TILES___*/
 		for(int i=0; i < this.listOfFallingTiles.size();i++)
-		{
-			if(this.listOfFallingTiles.get(i).getType() == 1)
-				{
-				g2d.drawImage(this.bitMap.getObstacle(),this.listOfFallingTiles.get(i).getX(), this.listOfFallingTiles.get(i).getY(), null);
-				/*
-					g2d.setColor(Color.GREEN);
-					g2d.fillRect(this.listOfFallingTiles.get(i).getX(), this.listOfFallingTiles.get(i).getY(), 
-							this.tileWidth, this.tileHeight);
-					g2d.setColor( Color.DARK_GRAY);
-					g2d.drawRect(this.listOfFallingTiles.get(i).getX(), this.listOfFallingTiles.get(i).getY(), 
-							this.tileWidth, this.tileHeight);
-				*/
-				}
-			if(this.listOfFallingTiles.get(i).getType() == 0)
-				{
-				g2d.drawImage(this.bitMap.getBackground(),this.listOfFallingTiles.get(i).getX(), this.listOfFallingTiles.get(i).getY(), null);
-				/*
-				g2d.setColor( Color.BLACK);
-				g2d.fillRect(this.listOfFallingTiles.get(i).getX(), this.listOfFallingTiles.get(i).getY(), 
-						this.tileWidth, this.tileHeight);
-				g2d.setColor( Color.DARK_GRAY);
-				g2d.drawRect(this.listOfFallingTiles.get(i).getX(), this.listOfFallingTiles.get(i).getY(), 
-						this.tileWidth, this.tileHeight);
-				*/
-				}
-			
-			
-		}
+			this.listOfFallingTiles.get(i).render(g2d);
+				
 		
 	}
 
+	@SuppressWarnings("unused")
 	private void drawNet(int i, Graphics2D g2d) {
 		g2d.setColor(Color.RED);
 		/*
@@ -383,40 +335,40 @@ public class Graph {
 		if(this.listRepresentation.get(i).size() != 0)
 			for(int j =0; j < this.listRepresentation.get(i).size();j++){
 				/*___LEFT___*/
-				if(this.listRepresentation.get(i).get(j).number == this.listOfVertices[i].getNumber() - 
+				if(this.listRepresentation.get(i).get(j).number == Graph.listOfVertices[i].getNumber() - 
 									this.numberOfVerticesInColumn )
 				{
 					/*___DRAW_LINE___*/
-					g2d.drawLine(this.listOfVertices[i].getY()+this.netLineConstant,
-							this.listOfVertices[i].getX()+this.tileHeight/2, 
+					g2d.drawLine(Graph.listOfVertices[i].getY()+this.netLineConstant,
+							Graph.listOfVertices[i].getX()+this.tileHeight/2, 
 							this.listRepresentation.get(i).get(j).getY() + this.tileWidth-this.netLineConstant,
 							this.listRepresentation.get(i).get(j).getX()+this.tileHeight/2);
 				}
 				/*___UP___*/
-				if(this.listRepresentation.get(i).get(j).number == this.listOfVertices[i].getNumber() - 1)
+				if(this.listRepresentation.get(i).get(j).number == Graph.listOfVertices[i].getNumber() - 1)
 				{
 					/*___DRAW_LINE___*/
-					g2d.drawLine(this.listOfVertices[i].getY()+this.tileWidth/2,
-							this.listOfVertices[i].getX()+this.netLineConstant, 
+					g2d.drawLine(Graph.listOfVertices[i].getY()+this.tileWidth/2,
+							Graph.listOfVertices[i].getX()+this.netLineConstant, 
 							this.listRepresentation.get(i).get(j).getY() + this.tileWidth/2,
 							this.listRepresentation.get(i).get(j).getX()+this.tileHeight - this.netLineConstant);
 				}
 				/*___DOWN___*/
-				if(this.listRepresentation.get(i).get(j).number == this.listOfVertices[i].getNumber() +1)
+				if(this.listRepresentation.get(i).get(j).number == Graph.listOfVertices[i].getNumber() +1)
 				{
 					/*___DRAW_LINE___*/
-					g2d.drawLine(this.listOfVertices[i].getY()+this.tileWidth/2,
-							this.listOfVertices[i].getX()+this.tileHeight - this.netLineConstant, 
+					g2d.drawLine(Graph.listOfVertices[i].getY()+this.tileWidth/2,
+							Graph.listOfVertices[i].getX()+this.tileHeight - this.netLineConstant, 
 							this.listRepresentation.get(i).get(j).getY() + this.tileWidth/2,
 							this.listRepresentation.get(i).get(j).getX()+this.netLineConstant);
 				}
 				/*___RIGHT___*/
-				if(this.listRepresentation.get(i).get(j).number == this.listOfVertices[i].getNumber() +
+				if(this.listRepresentation.get(i).get(j).number == Graph.listOfVertices[i].getNumber() +
 									this.numberOfVerticesInColumn)
 				{
-					/*___DRAW_LINE___*/
-					g2d.drawLine(this.listOfVertices[i].getY()+this.tileWidth-this.netLineConstant,
-							this.listOfVertices[i].getX()+this.tileHeight/2, 
+				/*___DRAW_LINE___*/
+				g2d.drawLine(Graph.listOfVertices[i].getY()+this.tileWidth-this.netLineConstant,
+							Graph.listOfVertices[i].getX()+this.tileHeight/2, 
 							this.listRepresentation.get(i).get(j).getY() + this.netLineConstant,
 							this.listRepresentation.get(i).get(j).getX()+this.tileHeight/2);
 				}
@@ -429,21 +381,25 @@ public class Graph {
 	}
 
 	public void updatePosition() {
+		
+		
 		for(int i = 0 ; i < this.totalNumberOfVertices; i++)
 		{
-			this.listOfVertices[i].decrementationY();
+			Graph.listOfVertices[i].decrementationY();
 			
 			/*__MAP'S_LOOP___*/
-			if(this.listOfVertices[0].getY() < - (this.tileWidth*2)){
+			if(Graph.listOfVertices[0].getY() < - (this.tileWidth*2)){
 				theMomentOfDybisz();
-				//showListOfVertices();
-			}
+							
+		}
 			
 			
 					
 		}
+		
 		/*___FADING_TILES___*/
 		fadingTiles();
+		
 		/*___UPDATING_TILES___*/
 		for(int i=0; i < this.listOfFallingTiles.size();i++)
 		{
@@ -476,23 +432,23 @@ public class Graph {
 		if(this.itIsTimeToCheck)
 		{
 			for(int k = 1 ; k < 10; k++)
-				if(this.listOfVertices[(this.numberOfVerticesInColumn-k)*this.numberOfVerticesInColumn].getY()
+				if(Graph.listOfVertices[(this.numberOfVerticesInColumn-k)*this.numberOfVerticesInColumn].getY()
 						< (this.tileWidth*(this.numberOfVerticesInColumn-k-1)))
 				{
 					
 					/*___SAVE_PREVIOUS_TYPE___*/
-					int previousType = this.listOfVertices[(this.numberOfVerticesInColumn-k)
+					int previousType = Graph.listOfVertices[(this.numberOfVerticesInColumn-k)
 					   				                    *this.numberOfVerticesInColumn + k -1].getType();
 					
 					/*___CHANGE TYPE_OF_APPROPRIATE_TILE___*/
-					this.listOfVertices[(this.numberOfVerticesInColumn-k)
+					Graph.listOfVertices[(this.numberOfVerticesInColumn-k)
 					                    *this.numberOfVerticesInColumn + k -1].setType(2);
 									
 					/*____ADD_NEW_TILE_TO_FALL___*/
 					this.listOfFallingTiles.add(new FallingTile(
-							this.listOfVertices[(this.numberOfVerticesInColumn-k)
-			   				                    *this.numberOfVerticesInColumn + k -1].getY(),this.listOfVertices[(this.numberOfVerticesInColumn-k)
-			   				                    *this.numberOfVerticesInColumn + k -1].getX(), previousType,"RANDOMXY"));
+							Graph.listOfVertices[(this.numberOfVerticesInColumn-k)
+			   				                    *this.numberOfVerticesInColumn + k -1].getY(),Graph.listOfVertices[(this.numberOfVerticesInColumn-k)
+			   				                    *this.numberOfVerticesInColumn + k -1].getX(), Graph.listOfImages[previousType]));
 					
 					
 					
